@@ -179,6 +179,34 @@
   .add-btn:hover{ transform:translateY(-1px); box-shadow:0 12px 24px -8px rgba(15,76,92,0.6); }
   .add-btn:active{ transform:translateY(0px) scale(0.99); }
 
+  .test-btn{
+    width:100%;
+    margin-top:10px;
+    border:1.5px solid #E1D9C4;
+    border-radius:12px;
+    padding:11px;
+    background:var(--sand);
+    color:var(--deep);
+    font-family:'Tajawal',sans-serif;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+    transition:background .15s;
+  }
+  .test-btn:hover{ background:var(--sand-2); }
+
+  .voice-warning{
+    display:none;
+    margin-top:12px;
+    background:#FDF1EC;
+    border:1.5px solid rgba(232,96,76,0.35);
+    color:#9A3F2E;
+    border-radius:12px;
+    padding:12px 14px;
+    font-size:12.5px;
+    line-height:1.8;
+  }
+
   .hint{
     font-size:12.5px;
     color:#8A9296;
@@ -334,7 +362,13 @@
       </div>
     </div>
     <button class="add-btn" id="addBtn">إضافة التذكير 🚀</button>
+    <button class="test-btn" id="testBtn">🔊 تجربة الصوت</button>
     <p class="hint">لازم تبقي الصفحة مفتوحة بالمتصفح عشان يشتغل التنبيه الصوتي. لو تبي التطبيق يرن حتى والصفحة مقفلة، لازم يتحول لتطبيق حقيقي (PWA) بخدمة إشعارات من السيرفر.</p>
+    <div id="voiceWarning" class="voice-warning">
+      ⚠️ جوالك ما فيه صوت عربي مثبت لتقنية النطق، عشان كذا يطلع الجرس بس بدون كلام.
+      بأندرويد: الإعدادات ← اللغات والإدخال ← تحويل النص إلى كلام ← ثبّت صوت عربي.
+      بآيفون: الإعدادات ← إمكانية الوصول ← المحتوى المنطوق ← الأصوات ← نزّل صوت عربي.
+    </div>
   </div>
 
   <div class="section-label">
@@ -359,6 +393,25 @@
   let reminders = []; // {id, text, targetTime, totalMs, firing, timerId, audioTimer}
   let idCounter = 1;
   let audioCtx = null;
+  let cachedVoices = [];
+  let voiceWarningShown = false;
+
+  function loadVoices(){
+    if (!('speechSynthesis' in window)) return;
+    cachedVoices = window.speechSynthesis.getVoices() || [];
+  }
+  loadVoices();
+  if ('speechSynthesis' in window){
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }
+
+  function pickArabicVoice(){
+    if (!cachedVoices.length) loadVoices();
+    if (!cachedVoices.length) return null;
+    return cachedVoices.find(v => v.lang === 'ar-SA')
+        || cachedVoices.find(v => (v.lang||'').toLowerCase().startsWith('ar'))
+        || null;
+  }
 
   function pad(n){ return String(n).padStart(2,'0'); }
   function setPickerTo(d){
@@ -423,12 +476,26 @@
     if (!('speechSynthesis' in window)) return;
     try{
       const u = new SpeechSynthesisUtterance('تذكير! ' + text);
-      u.lang = 'ar-SA';
+      const voice = pickArabicVoice();
+      if (voice){
+        u.voice = voice;
+        u.lang = voice.lang;
+      } else {
+        u.lang = 'ar-SA';
+        showVoiceWarningOnce();
+      }
       u.rate = 0.95;
       u.pitch = 1;
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(u);
     }catch(e){}
+  }
+
+  function showVoiceWarningOnce(){
+    if (voiceWarningShown) return;
+    voiceWarningShown = true;
+    const el = document.getElementById('voiceWarning');
+    if (el) el.style.display = 'block';
   }
 
   function notifyBrowser(text){
@@ -574,6 +641,13 @@
   });
 
   txtInput.addEventListener('keydown', (e)=>{ if (e.key === 'Enter') addBtn.click(); });
+
+  const testBtn = document.getElementById('testBtn');
+  testBtn.addEventListener('click', ()=>{
+    ensureAudio();
+    beep();
+    speak('هذا اختبار للصوت، إذا تسمعني فكل شي شغال تمام');
+  });
 
   // main tick
   setInterval(()=>{
