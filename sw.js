@@ -1,52 +1,47 @@
-const CACHE_NAME = 'thakkirni-v1';
+// sw.js - نسخة مطورة لإجبار المتصفح على التحديث فوراً
+const CACHE_NAME = 'thakkirni-v2'; // تغيير الاسم لإجبار المتصفح على التحديث
 const ASSETS = [
 './',
-'./index.html'
+'./index.html',
+'./manifest.json'
 ];
 
-// تثبيت الـ Service Worker وحفظ الملفات في الكاش
 self.addEventListener('install', (e) => {
 e.waitUntil(
 caches.open(CACHE_NAME).then((cache) => {
 return cache.addAll(ASSETS);
 })
 );
-self.skipWaiting();
+self.skipWaiting(); // تفعيل فوري بدون انتظار اغلاق التبويبات القديمة
 });
 
 self.addEventListener('activate', (e) => {
-e.waitUntil(self.clients.claim());
+e.waitUntil(
+caches.keys().then((keys) => {
+return Promise.all(
+keys.map((key) => {
+if (key !== CACHE_NAME) {
+return caches.delete(key); // مسح الكاش القديم نهائياً
+}
+})
+);
+}).then(() => self.clients.claim())
+);
 });
 
-// استقبال الأوامر من الصفحة الرئيسية لجدولة الإشعارات في الخلفية
+// استقبال أمر جدولة التذكير من الصفحة الرئيسية
 self.addEventListener('message', (event) => {
 if (event.data && event.data.type === 'SCHEDULE_NOTIFICATION') {
 const { title, body, delay } = event.data;
-// جدولة الإشعار ليعمل بعد الوقت المحدد بالملي ثانية
+
 setTimeout(() => {
 self.registration.showNotification(title, {
 body: body,
 vibrate: [200, 100, 200],
-data: { url: self.location.origin }
+badge: './icon.png',
+icon: './icon.png'
 });
 }, delay);
 }
-});
-
-// فتح التطبيق عند الضغط على الإشعار
-self.addEventListener('notificationclick', (event) => {
-event.notification.close();
-event.waitUntil(
-clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
-for (let client of windowClients) {
-if (client.url === event.notification.data.url && 'focus' in client) {
-return client.focus();
-}
-}
-if (clients.openWindow) {
-return clients.openWindow(event.notification.data.url);
-}
-})
-);
 });
 
