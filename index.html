@@ -657,17 +657,44 @@
         triggerFire(r);
         changed = true;
       }
-    });
-    render();
-  }, 1000);
+  // 1. تسجيل الـ Service Worker وطلب إذن الإشعارات
+let swRegistration = null;
 
-  render();
-})();
+if ('serviceWorker' in navigator && 'Notification' in window) {
+window.addEventListener('load', () => {
+navigator.serviceWorker.register('sw.js')
+.then((reg) => {
+swRegistration = reg;
+console.log('Service Worker Registered Successfully!');
+// طلب إذن الإشعارات تلقائياً عند تحميل الصفحة
+if (Notification.permission === 'default') {
+Notification.requestPermission();
+}
+}).catch(err => console.log('Service Worker Registration Failed:', err));
+});
+}
 
-if ('serviceWorker' in navigator){
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
-  });
+// 2. دالة إرسال التذكير إلى الخلفية ليتم تنفيذه حتى لو أُغلق الجوال
+function scheduleBackgroundNotification(title, message, targetTime) {
+const now = Date.now();
+const delay = targetTime - now;
+
+if (delay <= 0) return; // الوقت مضى بالفعل
+
+if (swRegistration && Notification.permission === 'granted') {
+navigator.serviceWorker.ready.then((reg) => {
+if (reg.active) {
+reg.active.postMessage({
+type: 'SCHEDULE_NOTIFICATION',
+title: title,
+body: message,
+delay: delay
+});
+}
+});
+}
+}
+
 }
 </script>
 </body>
