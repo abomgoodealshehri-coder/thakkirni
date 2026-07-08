@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ذكّرني</title>
+<meta name="theme-color" content="#0F4C5C">
+<meta name="description" content="أداة تذكير صوتية بالعربي — اختر الوقت وسأذكرك بصوت عالٍ">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ذكّرني">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E2A33;
+    --deep:#0F4C5C;
+    --aqua:#3FA7D6;
+    --sand:#F3ECDD;
+    --sand-2:#EAE0C9;
+    --coral:#E8604C;
+    --green:#3E9C74;
+    --white:#FFFDF8;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(63,167,214,0.18), transparent 55%),
+      radial-gradient(ellipse at 100% 0%, rgba(232,96,76,0.10), transparent 45%),
+      var(--sand);
+    color:var(--ink);
+    font-family:'IBM Plex Sans Arabic','Tajawal',sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:32px 16px 60px;
+  }
+  .wrap{ width:100%; max-width:560px; }
+
+  /* header */
+  .hero{
+    text-align:center;
+    margin-bottom:28px;
+    position:relative;
+  }
+  .bell{
+    font-size:40px;
+    display:inline-block;
+    animation:swing 3.2s ease-in-out infinite;
+    transform-origin:top center;
+  }
+  @keyframes swing{
+    0%,100%{transform:rotate(0deg);}
+    10%{transform:rotate(12deg);}
+    20%{transform:rotate(-10deg);}
+    30%{transform:rotate(6deg);}
+    40%{transform:rotate(-4deg);}
+    50%,100%{transform:rotate(0deg);}
+  }
+  h1{
+    font-family:'Tajawal',sans-serif;
+    font-weight:900;
+    font-size:clamp(30px,6vw,42px);
+    margin:6px 0 4px;
+    letter-spacing:-0.5px;
+    color:var(--deep);
+  }
+  .sub{
+    color:#5B6B70;
+    font-size:15px;
+    font-weight:500;
+    margin:0;
+  }
+  .wave-divider{
+    width:100%;
+    height:14px;
+    margin-top:18px;
+    opacity:0.9;
+  }
+
+  /* form card */
+  .card{
+    background:var(--white);
+    border:1px solid rgba(15,76,92,0.10);
+    border-radius:20px;
+    padding:22px;
+    box-shadow:0 10px 30px -14px rgba(15,76,92,0.25);
+    margin-bottom:26px;
+  }
+  label{
+    display:block;
+    font-family:'Tajawal',sans-serif;
+    font-weight:700;
+    font-size:14.5px;
+    color:var(--deep);
+    margin-bottom:8px;
+  }
+  .field{ margin-bottom:16px; }
+  input[type="text"], input[type="number"]{
+    width:100%;
+    border:1.5px solid #E1D9C4;
+    background:var(--sand);
+    border-radius:12px;
+    padding:13px 14px;
+    font-size:15.5px;
+    font-family:'IBM Plex Sans Arabic',sans-serif;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .15s, background .15s;
+  }
+  input:focus{
+    border-color:var(--aqua);
+    background:var(--white);
+  }
+  .minutes-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .minutes-row input{ width:100px; text-align:center; font-weight:700;}
+  .datetime-row{
+    display:flex;
+    gap:10px;
+  }
+  .datetime-row input{ flex:1; font-weight:700; }
+  input[type="date"], input[type="time"]{
+    width:100%;
+    border:1.5px solid #E1D9C4;
+    background:var(--sand);
+    border-radius:12px;
+    padding:13px 14px;
+    font-size:15px;
+    font-family:'IBM Plex Sans Arabic',sans-serif;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .15s, background .15s;
+  }
+  input[type="date"]:focus, input[type="time"]:focus{
+    border-color:var(--aqua);
+    background:var(--white);
+  }
+  .chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  .chip{
+    border:1.5px solid #E1D9C4;
+    background:var(--sand);
+    border-radius:999px;
+    padding:8px 14px;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--deep);
+    cursor:pointer;
+    transition:all .15s;
+  }
+  .chip:hover, .chip.active{
+    background:var(--deep);
+    border-color:var(--deep);
+    color:var(--white);
+  }
+  .add-btn{
+    width:100%;
+    margin-top:6px;
+    border:none;
+    border-radius:14px;
+    padding:15px;
+    background:linear-gradient(135deg, var(--deep), var(--aqua));
+    color:var(--white);
+    font-family:'Tajawal',sans-serif;
+    font-weight:700;
+    font-size:16.5px;
+    cursor:pointer;
+    box-shadow:0 8px 20px -8px rgba(15,76,92,0.55);
+    transition:transform .12s, box-shadow .12s;
+  }
+  .add-btn:hover{ transform:translateY(-1px); box-shadow:0 12px 24px -8px rgba(15,76,92,0.6); }
+  .add-btn:active{ transform:translateY(0px) scale(0.99); }
+
+  .hint{
+    font-size:12.5px;
+    color:#8A9296;
+    margin-top:10px;
+    text-align:center;
+    line-height:1.6;
+  }
+
+  /* list */
+  .section-label{
+    font-family:'Tajawal',sans-serif;
+    font-weight:700;
+    color:var(--deep);
+    font-size:14px;
+    margin:0 4px 12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .count-badge{
+    background:var(--deep);
+    color:var(--white);
+    border-radius:999px;
+    padding:2px 10px;
+    font-size:12px;
+  }
+  .empty{
+    text-align:center;
+    color:#93999B;
+    font-size:14px;
+    padding:30px 10px;
+    border:1.5px dashed #DCD3BC;
+    border-radius:16px;
+  }
+
+  .item{
+    background:var(--white);
+    border:1px solid rgba(15,76,92,0.10);
+    border-radius:16px;
+    padding:16px 16px 14px;
+    margin-bottom:12px;
+    position:relative;
+    overflow:hidden;
+  }
+  .item.firing{
+    animation:flash 0.9s ease-in-out infinite;
+  }
+  @keyframes flash{
+    0%,100%{ box-shadow:0 0 0 0 rgba(232,96,76,0.0); border-color:rgba(232,96,76,0.25);}
+    50%{ box-shadow:0 0 0 6px rgba(232,96,76,0.12); border-color:rgba(232,96,76,0.6);}
+  }
+  .item-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+    position:relative;
+    z-index:2;
+  }
+  .item-text{
+    font-weight:600;
+    font-size:15.5px;
+    line-height:1.5;
+    flex:1;
+  }
+  .item-datetime{
+    font-weight:500;
+    font-size:12px;
+    color:#8A9296;
+    margin-top:4px;
+  }
+  .item-time{
+    font-family:'Tajawal',sans-serif;
+    font-weight:900;
+    font-size:18px;
+    color:var(--deep);
+    white-space:nowrap;
+    direction:ltr;
+    display:inline-block;
+  }
+  .item-actions{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+    position:relative;
+    z-index:2;
+  }
+  .mini-btn{
+    border:none;
+    border-radius:10px;
+    padding:7px 12px;
+    font-size:12.5px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:'IBM Plex Sans Arabic',sans-serif;
+  }
+  .mini-btn.stop{ background:var(--coral); color:white; }
+  .mini-btn.snooze{ background:var(--sand-2); color:var(--deep); }
+  .mini-btn.del{ background:transparent; color:#A9A0A0; }
+
+  .wave-fill{
+    position:absolute;
+    inset:0 0 0 0;
+    background:linear-gradient(180deg, rgba(63,167,214,0.16), rgba(63,167,214,0.05));
+    width:0%;
+    transition:width 1s linear;
+    z-index:1;
+  }
+  .item[dir] .wave-fill{ right:0; left:auto; }
+
+  footer{
+    text-align:center;
+    margin-top:30px;
+    font-size:12px;
+    color:#A6ADAF;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .bell{animation:none;}
+    .item.firing{animation:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <span class="bell">🔔</span>
+    <h1>ذكّرني</h1>
+    <p class="sub">اكتب تذكيرك وحدد الوقت، وسأذكرك بصوت عالٍ!</p>
+    <svg class="wave-divider" viewBox="0 0 560 14" preserveAspectRatio="none">
+      <path d="M0,7 C 40,0 80,14 120,7 C160,0 200,14 240,7 C280,0 320,14 360,7 C400,0 440,14 480,7 C520,0 540,0 560,7"
+            fill="none" stroke="#3FA7D6" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label for="txt">📝 ماذا تريد أن أذكّرك؟</label>
+      <input type="text" id="txt" placeholder="مثال: اتصل بالمقاول بخصوص عداد جردة" maxlength="200">
+    </div>
+    <div class="field">
+      <label for="rdate">⏰ متى تبي التذكير؟ (اليوم والساعة)</label>
+      <div class="datetime-row">
+        <input type="date" id="rdate">
+        <input type="time" id="rtime">
+      </div>
+      <div class="chips">
+        <span class="chip" data-quick="today">اليوم</span>
+        <span class="chip" data-quick="tomorrow">بكرة</span>
+        <span class="chip" data-quick="+1h">بعد ساعة</span>
+        <span class="chip" data-quick="+3h">بعد ٣ ساعات</span>
+      </div>
+    </div>
+    <button class="add-btn" id="addBtn">إضافة التذكير 🚀</button>
+    <p class="hint">لازم تبقي الصفحة مفتوحة بالمتصفح عشان يشتغل التنبيه الصوتي. لو تبي التطبيق يرن حتى والصفحة مقفلة، لازم يتحول لتطبيق حقيقي (PWA) بخدمة إشعارات من السيرفر.</p>
+  </div>
+
+  <div class="section-label">
+    <span>التذكيرات النشطة</span>
+    <span class="count-badge" id="countBadge">0</span>
+  </div>
+  <div id="list"></div>
+
+  <footer>يعمل بالكامل داخل متصفحك — لا يتم إرسال أي بيانات لأي خادم.</footer>
+</div>
+
+<script>
+(function(){
+  const listEl = document.getElementById('list');
+  const countBadge = document.getElementById('countBadge');
+  const txtInput = document.getElementById('txt');
+  const dateInput = document.getElementById('rdate');
+  const timeInput = document.getElementById('rtime');
+  const addBtn = document.getElementById('addBtn');
+  const chips = document.querySelectorAll('.chip');
+
+  let reminders = []; // {id, text, targetTime, totalMs, firing, timerId, audioTimer}
+  let idCounter = 1;
+  let audioCtx = null;
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function setPickerTo(d){
+    dateInput.value = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    timeInput.value = pad(d.getHours())+':'+pad(d.getMinutes());
+  }
+
+  // default: 10 minutes from now
+  setPickerTo(new Date(Date.now() + 10*60*1000));
+
+  chips.forEach(c=>{
+    c.addEventListener('click', ()=>{
+      chips.forEach(x=>x.classList.remove('active'));
+      c.classList.add('active');
+      const q = c.dataset.quick;
+      const now = new Date();
+      if (q === 'today'){
+        setPickerTo(new Date(now.getTime() + 10*60*1000));
+      } else if (q === 'tomorrow'){
+        const d = new Date(now);
+        d.setDate(d.getDate()+1);
+        d.setHours(8,0,0,0);
+        setPickerTo(d);
+      } else if (q === '+1h'){
+        setPickerTo(new Date(now.getTime() + 60*60*1000));
+      } else if (q === '+3h'){
+        setPickerTo(new Date(now.getTime() + 3*60*60*1000));
+      }
+    });
+  });
+
+  if (Notification && Notification.permission === 'default'){
+    // Ask politely on first interaction rather than immediately
+  }
+
+  function ensureAudio(){
+    if (!audioCtx){
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+
+  function beep(){
+    try{
+      const ctx = ensureAudio();
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(880, ctx.currentTime);
+      o.frequency.setValueAtTime(660, ctx.currentTime + 0.15);
+      g.gain.setValueAtTime(0.0001, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.5, ctx.currentTime + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
+      o.connect(g); g.connect(ctx.destination);
+      o.start();
+      o.stop(ctx.currentTime + 0.42);
+    }catch(e){ /* audio not available */ }
+  }
+
+  function speak(text){
+    if (!('speechSynthesis' in window)) return;
+    try{
+      const u = new SpeechSynthesisUtterance('تذكير! ' + text);
+      u.lang = 'ar-SA';
+      u.rate = 0.95;
+      u.pitch = 1;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+
+  function notifyBrowser(text){
+    if ('Notification' in window){
+      if (Notification.permission === 'granted'){
+        new Notification('🔔 تذكير', { body: text });
+      } else if (Notification.permission !== 'denied'){
+        Notification.requestPermission();
+      }
+    }
+  }
+
+  function fmtTime(ms){
+    if (ms < 0) ms = 0;
+    const totalSec = Math.ceil(ms/1000);
+    const h = Math.floor(totalSec/3600);
+    const m = Math.floor((totalSec%3600)/60);
+    const s = totalSec%60;
+    if (h > 0) return h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  }
+
+  function render(){
+    countBadge.textContent = reminders.length;
+    if (reminders.length === 0){
+      listEl.innerHTML = '<div class="empty">ما فيه تذكيرات حالياً — أضف أول تذكير لك من الأعلى ⬆️</div>';
+      return;
+    }
+    listEl.innerHTML = '';
+    reminders
+      .slice()
+      .sort((a,b)=> a.targetTime - b.targetTime)
+      .forEach(r=>{
+        const remaining = r.targetTime - Date.now();
+        const pct = r.firing ? 100 : Math.max(0, Math.min(100, 100 - (remaining / r.totalMs) * 100));
+        const div = document.createElement('div');
+        div.className = 'item' + (r.firing ? ' firing' : '');
+        div.innerHTML = `
+          <div class="wave-fill" style="width:${pct}%"></div>
+          <div class="item-top">
+            <div class="item-text">
+              ${escapeHtml(r.text)}
+              <div class="item-datetime">${fmtAbsolute(r.targetTime)}</div>
+            </div>
+            <div class="item-time">${r.firing ? '🔔' : fmtTime(remaining)}</div>
+          </div>
+          <div class="item-actions">
+            ${r.firing ? `<button class="mini-btn stop" data-act="stop" data-id="${r.id}">إيقاف</button>
+                          <button class="mini-btn snooze" data-act="snooze" data-id="${r.id}">تأجيل ٥ دقائق</button>`
+                       : `<button class="mini-btn del" data-act="del" data-id="${r.id}">حذف</button>`}
+          </div>
+        `;
+        listEl.appendChild(div);
+      });
+  }
+
+  function fmtAbsolute(ts){
+    const d = new Date(ts);
+    return d.toLocaleString('ar-SA', { weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+  }
+
+  function escapeHtml(s){
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function addReminder(text, targetTime){
+    const totalMs = Math.max(1000, targetTime - Date.now());
+    const r = {
+      id: idCounter++,
+      text: text,
+      targetTime: targetTime,
+      totalMs: totalMs,
+      firing: false
+    };
+    reminders.push(r);
+    render();
+  }
+
+  function triggerFire(r){
+    r.firing = true;
+    render();
+    beep();
+    speak(r.text);
+    notifyBrowser(r.text);
+    r.audioTimer = setInterval(()=>{ beep(); }, 2500);
+  }
+
+  function stopReminder(id){
+    const r = reminders.find(x=>x.id===id);
+    if (r && r.audioTimer) clearInterval(r.audioTimer);
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    reminders = reminders.filter(x=>x.id!==id);
+    render();
+  }
+
+  function snoozeReminder(id){
+    const r = reminders.find(x=>x.id===id);
+    if (!r) return;
+    if (r.audioTimer) clearInterval(r.audioTimer);
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    r.firing = false;
+    r.totalMs = 5*60*1000;
+    r.targetTime = Date.now() + r.totalMs;
+    render();
+  }
+
+  listEl.addEventListener('click', (e)=>{
+    const btn = e.target.closest('button[data-act]');
+    if (!btn) return;
+    const id = Number(btn.dataset.id);
+    const act = btn.dataset.act;
+    if (act === 'del') { reminders = reminders.filter(x=>x.id!==id); render(); }
+    if (act === 'stop') stopReminder(id);
+    if (act === 'snooze') snoozeReminder(id);
+  });
+
+  addBtn.addEventListener('click', ()=>{
+    ensureAudio();
+    if ('Notification' in window && Notification.permission === 'default'){
+      Notification.requestPermission();
+    }
+    const text = txtInput.value.trim();
+    if (!text){ txtInput.focus(); txtInput.style.borderColor = '#E8604C'; setTimeout(()=>txtInput.style.borderColor='',900); return; }
+    if (!dateInput.value || !timeInput.value){
+      dateInput.style.borderColor = '#E8604C'; timeInput.style.borderColor = '#E8604C';
+      setTimeout(()=>{ dateInput.style.borderColor=''; timeInput.style.borderColor=''; },900);
+      return;
+    }
+    const target = new Date(dateInput.value + 'T' + timeInput.value + ':00');
+    if (isNaN(target.getTime()) || target.getTime() <= Date.now()){
+      dateInput.style.borderColor = '#E8604C'; timeInput.style.borderColor = '#E8604C';
+      setTimeout(()=>{ dateInput.style.borderColor=''; timeInput.style.borderColor=''; },900);
+      alert('اختر وقتاً في المستقبل ⏰');
+      return;
+    }
+    addReminder(text, target.getTime());
+    txtInput.value = '';
+    txtInput.focus();
+    chips.forEach(x=>x.classList.remove('active'));
+    setPickerTo(new Date(Date.now() + 10*60*1000));
+  });
+
+  txtInput.addEventListener('keydown', (e)=>{ if (e.key === 'Enter') addBtn.click(); });
+
+  // main tick
+  setInterval(()=>{
+    let changed = false;
+    reminders.forEach(r=>{
+      if (!r.firing && r.targetTime <= Date.now()){
+        triggerFire(r);
+        changed = true;
+      }
+    });
+    render();
+  }, 1000);
+
+  render();
+})();
+
+if ('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
