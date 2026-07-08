@@ -1,41 +1,52 @@
-const CACHE_NAME = 'zakerni-v1';
-const SHELL = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/apple-touch-icon.png'
+const CACHE_NAME = 'thakkirni-v1';
+const ASSETS = [
+'./',
+'./index.html'
 ];
 
+// تثبيت الـ Service Worker وحفظ الملفات في الكاش
 self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL))
-  );
-  self.skipWaiting();
+e.waitUntil(
+caches.open(CACHE_NAME).then((cache) => {
+return cache.addAll(ASSETS);
+})
+);
+self.skipWaiting();
 });
 
 self.addEventListener('activate', (e) => {
-  e.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
-    )
-  );
-  self.clients.claim();
+e.waitUntil(self.clients.claim());
 });
 
-self.addEventListener('fetch', (e) => {
-  if (e.request.method !== 'GET') return;
-  e.respondWith(
-    caches.match(e.request).then((cached) => {
-      const network = fetch(e.request).then((res) => {
-        if (res && res.status === 200 && e.request.url.startsWith(self.location.origin)) {
-          const clone = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
-        }
-        return res;
-      }).catch(() => cached);
-      return cached || network;
-    })
-  );
+// استقبال الأوامر من الصفحة الرئيسية لجدولة الإشعارات في الخلفية
+self.addEventListener('message', (event) => {
+if (event.data && event.data.type === 'SCHEDULE_NOTIFICATION') {
+const { title, body, delay } = event.data;
+// جدولة الإشعار ليعمل بعد الوقت المحدد بالملي ثانية
+setTimeout(() => {
+self.registration.showNotification(title, {
+body: body,
+vibrate: [200, 100, 200],
+data: { url: self.location.origin }
 });
+}, delay);
+}
+});
+
+// فتح التطبيق عند الضغط على الإشعار
+self.addEventListener('notificationclick', (event) => {
+event.notification.close();
+event.waitUntil(
+clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
+for (let client of windowClients) {
+if (client.url === event.notification.data.url && 'focus' in client) {
+return client.focus();
+}
+}
+if (clients.openWindow) {
+return clients.openWindow(event.notification.data.url);
+}
+})
+);
+});
+
