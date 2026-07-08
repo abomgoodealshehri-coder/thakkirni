@@ -3,15 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تطبيق تذكير صوتي</title>
+<title>تطبيق ذكّرني الصوتي</title>
+<!-- ربط ملف الـ PWA Manifest -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#007bff">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
 <style>
-:جذر {
---الأساسي: #2b78c5؛
+:root {
+--primary: #2b78c5;
 --primary-hover: #1e5a99;
 --bg-gradient: linear-gradient(135deg, #eef5fc 0%, #dbe9f6 100%);
 --card-bg: #ffffff;
@@ -20,35 +21,35 @@
 
 * {
 box-sizing: border-box;
-عائلة الخطوط: 'Segoe UI'، Tahoma، Jennifer، Verdana، sans-serif؛
-الهامش: 0؛
-الحشو: 0؛
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+margin: 0;
+padding: 0;
 }
 
-جسم {
-الخلفية: فار(--bg-gradient);
-اللون: متغير(--text-main)؛
-الحد الأدنى للارتفاع: 100vh؛
-العرض: مرن؛
+body {
+background: var(--bg-gradient);
+color: var(--text-main);
+min-height: 100vh;
+display: flex;
 justify-content: center;
 align-items: center;
-الحشو: 20 بكسل؛
+padding: 20px;
 }
 
 .app-container {
-الخلفية: var(--card-bg);
+background: var(--card-bg);
 border-radius: 24px;
 box-shadow: 0 12px 40px rgba(0,0,0,0.08);
-العرض: 100%؛
-أقصى عرض: 450 بكسل؛
-الحشو: 30 بكسل؛
+width: 100%;
+max-width: 450px;
+padding: 30px;
 text-align: center;
 }
 
 h2 {
-اللون: متغير(--الأساسي)؛
+color: var(--primary);
 margin-bottom: 25px;
-حجم الخط: 1.6 ريم؛
+font-size: 1.6rem;
 }
 
 .form-group {
@@ -56,83 +57,83 @@ margin-bottom: 20px;
 text-align: right;
 }
 
-ملصق {
-العرض: كتلة؛
+label {
+display: block;
 margin-bottom: 8px;
-وزن الخط: 600؛
-اللون: 555؛
-حجم الخط: 0.95 ريم؛
+font-weight: 600;
+color: #555;
+font-size: 0.95rem;
 }
 
 input[type="text"], input[type="datetime-local"] {
-العرض: 100%؛
-الحشو: 14 بكسل؛
+width: 100%;
+padding: 14px;
 border: 2px solid #e0e0e0;
 border-radius: 12px;
-حجم الخط: 1 ريم؛
+font-size: 1rem;
 text-align: right;
-الانتقال: لون الحدود 0.3 ثانية؛
-المخطط: لا يوجد؛
+transition: border-color 0.3s;
+outline: none;
 }
 
 input:focus {
-لون الحدود: متغير(--الأساسي)؛
+border-color: var(--primary);
 }
 
 .quick-buttons {
-العرض: شبكة؛
+display: grid;
 grid-template-columns: repeat(3, 1fr);
-الفجوة: 10 بكسل؛
+gap: 10px;
 margin-top: 10px;
 }
 
 .btn-quick {
-الخلفية: #f0f4f8؛
-الحدود: لا شيء؛
-الحشو: 10 بكسل؛
+background: #f0f4f8;
+border: none;
+padding: 10px;
 border-radius: 8px;
-حجم الخط: 0.85 ريم؛
-المؤشر: مؤشر؛
-وزن الخط: 500؛
-اللون: #444؛
-الانتقال: جميعها 0.2 ثانية؛
+font-size: 0.85rem;
+cursor: pointer;
+font-weight: 500;
+color: #444;
+transition: all 0.2s;
 }
 
 .btn-quick:hover {
-الخلفية: #dbe9f6؛
-اللون: متغير(--الأساسي)؛
+background: #dbe9f6;
+color: var(--primary);
 }
 
 .btn-main {
-الخلفية: متغير(--الأساسي)؛
-اللون: أبيض؛
-الحدود: لا شيء؛
-العرض: 100%؛
-الحشو: 15 بكسل؛
+background: var(--primary);
+color: white;
+border: none;
+width: 100%;
+padding: 15px;
 border-radius: 14px;
-حجم الخط: 1.1 ريم؛
-وزن الخط: غامق؛
-المؤشر: مؤشر؛
+font-size: 1.1rem;
+font-weight: bold;
+cursor: pointer;
 margin-top: 15px;
 box-shadow: 0 4px 15px rgba(43, 120, 197, 0.3);
-الانتقال: الخلفية 0.2 ثانية؛
+transition: background 0.2s;
 }
 
 .btn-main:hover {
-الخلفية: فار(--primary-hover);
+background: var(--primary-hover);
 }
 
 .btn-secondary {
-الخلفية: #f7f9fc;
+background: #f7f9fc;
 border: 2px solid #e2e8f0;
-اللون: #4a5568؛
-العرض: 100%؛
-الحشو: 12 بكسل؛
+color: #4a5568;
+width: 100%;
+padding: 12px;
 border-radius: 12px;
-حجم الخط: 0.95 ريم؛
-المؤشر: مؤشر؛
+font-size: 0.95rem;
+cursor: pointer;
 margin-top: 10px;
-وزن الخط: 500؛
+font-weight: 500;
 }
 
 .reminders-list {
@@ -141,38 +142,38 @@ text-align: right;
 }
 
 .reminders-list h3 {
-حجم الخط: 1.1 ريم؛
+font-size: 1.1rem;
 border-bottom: 2px solid #f0f4f8;
 padding-bottom: 8px;
 margin-bottom: 15px;
-اللون: #444؛
+color: #444;
 }
 
 .reminder-item {
-الخلفية: #f8fafc؛
-الحشو: 12 بكسل 15 بكسل؛
+background: #f8fafc;
+padding: 12px 15px;
 border-radius: 10px;
 margin-bottom: 10px;
-العرض: مرن؛
+display: flex;
 justify-content: space-between;
 align-items: center;
 border-right: 4px solid var(--primary);
 }
 
 .reminder-info span {
-العرض: كتلة؛
-حجم الخط: 0.85 ريم؛
-اللون: #718096؛
+display: block;
+font-size: 0.85rem;
+color: #718096;
 margin-top: 4px;
 }
 
 .btn-delete {
-الخلفية: لا شيء؛
-الحدود: لا شيء؛
-اللون: #e53e3e؛
-المؤشر: مؤشر؛
-حجم الخط: 0.9 ريم؛
-وزن الخط: غامق؛
+background: none;
+border: none;
+color: #e53e3e;
+cursor: pointer;
+font-size: 0.9rem;
+font-weight: bold;
 }
 </style>
 </head>
@@ -192,48 +193,48 @@ margin-top: 4px;
 
 <div class="quick-buttons">
 <button class="btn-quick" onclick="setQuickTime(1)">بعد دقيقة</button>
-<button class="btn-quick" onclick="setQuickTime(5)">بعد حمام السباحة</button>
-<button class="btn-quick" onclick="setQuickTime(60)">بعد الساعة</button>
+<button class="btn-quick" onclick="setQuickTime(5)">بعد ٥ دقائق</button>
+<button class="btn-quick" onclick="setQuickTime(60)">بعد ساعة</button>
 </div>
 </div>
 
 <button class="btn-main" onclick="addReminder()">🚀 إضافة التذكير</button>
-<button class="btn- Secondary" onclick="testAudio()">🔊 تجربة الصوت والبدء</button>
+<button class="btn-secondary" onclick="testAudio()">🔊 تجربة الصوت والبدء</button>
 
 <div class="reminders-list">
-<h3>التذكيرات العضوية (<span id="count">0</span>)</h3>
+<h3>التذكيرات النشطة (<span id="count">0</span>)</h3>
 <div id="listContainer"></div>
 </div>
 </div>
 
 <script>
-let reminds = JSON.parse(localStorage.getItem('reminders')) || [];
+let reminders = JSON.parse(localStorage.getItem('reminders')) || [];
 let swRegistration = null;
 
 // 1. تسجيل الـ Service Worker ليعمل في الخلفية والجوال مقفل
-إذا كان ('serviceWorker' موجودًا في navigator و'Notification' موجودًا في window) {
+if ('serviceWorker' in navigator && 'Notification' in window) {
 window.addEventListener('load', () => {
 navigator.serviceWorker.register('sw.js')
 .then((reg) => {
 swRegistration = reg;
-console.log('تم تسجيل عامل الخدمة بفعالية!');
-إذا كانت صلاحية الإشعارات هي "افتراضية" {
+console.log('Service Worker تم تسجيله بنجاح!');
+if (Notification.permission === 'default') {
 Notification.requestPermission();
 }
 }).catch(err => console.log('فشل تسجيل الـ Service Worker:', err));
 });
 }
 
-// ضبط الوقت الافتراضي بعد القرآن الكريم للتجربة
+// تعيين الوقت الافتراضي بعد دقيقة تسهيلاً للتجربة
 window.onload = () => {
 setQuickTime(1);
 renderReminders();
 };
 
-دالة setQuickTime(minutes) {
+function setQuickTime(minutes) {
 const now = new Date();
 now.setMinutes(now.getMinutes() + minutes);
-// تحويل الوقت لصيغة لتسويق البحث المحلي
+
 const year = now.getFullYear();
 const month = String(now.getMonth() + 1).padStart(2, '0');
 const day = String(now.getDate()).padStart(2, '0');
@@ -243,73 +244,72 @@ const minutesStr = String(now.getMinutes()).padStart(2, '0');
 document.getElementById('reminderTime').value = `${year}-${month}-${day}T${hours}:${minutesStr}`;
 }
 
-// تفعيل الصوت المبدئي لحظر الإصدار
-دالة اختبار الصوت() {
-talk("تم تفعيل نظام الصوت الفعال، جرب جدول التنبيه الآن");
+function testAudio() {
+speak("تم تفعيل نظام الصوت بنجاح، جرب جدولة تنبيه الآن");
 }
 
-دالة التحدث(النص) {
-إذا كان ('speechSynthesis' موجودًا في النافذة) {
-window.speechSynthesis.cancel(); // إيقاف أي صوت متبقي
+function speak(text) {
+if ('speechSynthesis' in window) {
+window.speechSynthesis.cancel();
 const utterance = new SpeechSynthesisUtterance(text);
 utterance.lang = 'ar-SA';
-معدل الكلام = 0.9؛ // سرعة النطق
+utterance.rate = 0.9;
 window.speechSynthesis.speak(utterance);
 }
 }
 
-دالة إضافة تذكير () {
+function addReminder() {
 const textInput = document.getElementById('reminderText').value.trim();
 const timeInput = document.getElementById('reminderTime').value;
 
-إذا لم يكن حقل إدخال النص أو حقل إدخال الوقت موجودًا،
-تنبيه("الرجاء النص نص التذكير والوقت!");
-يعود؛
+if (!textInput || !timeInput) {
+alert("الرجاء إدخال نص التذكير والوقت!");
+return;
 }
 
 const targetTimestamp = new Date(timeInput).getTime();
 const delay = targetTimestamp - Date.now();
 
-إذا كان (التأخير <= 0) {
-تنبيه("الرجاء اختيار وقت في المستقبل!");
-يعود؛
+if (delay <= 0) {
+alert("الرجاء اختيار وقت في المستقبل!");
+return;
 }
 
-const remind = {
-المعرّف: التاريخ.الآن()،
-نص: إدخال نصي،
-الوقت: إدخال الوقت،
-الطابع الزمني: الطابع الزمني المستهدف،
-تم الطرد: خطأ
+const reminder = {
+id: Date.now(),
+text: textInput,
+time: timeInput,
+timestamp: targetTimestamp,
+fired: false
 };
 
-reminds.push(reminder);
+reminders.push(reminder);
 saveReminders();
 renderReminders();
 
-// إرسال التذكير إلى الـ Service Worker لجدولته في الخلفية (للجوال والشاشة مقفلة)
-إذا كان (swRegistration && Notification.permission === 'granted') {
+// إرسال التذكير إلى الـ Service Worker لجدولته في الخلفية
+if (swRegistration && Notification.permission === 'granted') {
 navigator.serviceWorker.ready.then((reg) => {
-إذا كان (reg.active) {
+if (reg.active) {
 reg.active.postMessage({
-النوع: 'SCHEDULE_NOTIFICATION'،
-العنوان: '⏰ حان وقت التذكير',
-نص الإدخال: textInput,
-التأخير: التأخير
+type: 'SCHEDULE_NOTIFICATION',
+title: '⏰ حان وقت التذكير',
+body: textInput,
+delay: delay
 });
 }
 });
 }
 
-تنبيه("🚀 تم إضافة التذكير وجدوله الفعال في الخلفية!");
+alert("🚀 تم إضافة التذكير وجدولته بنجاح في الخلفية!");
 }
 
-دالة renderReminders() {
-حاوية const = document.getElementById('listContainer');
+function renderReminders() {
+const container = document.getElementById('listContainer');
 const countSpan = document.getElementById('count');
 container.innerHTML = '';
 
-const activeReminders = reminds.filter(r => !r.fired);
+const activeReminders = reminders.filter(r => !r.fired);
 countSpan.innerText = activeReminders.length;
 
 activeReminders.forEach(r => {
@@ -321,27 +321,26 @@ item.innerHTML = `
 <strong>${r.text}</strong>
 <span>${dateStr}</span>
 </div>
-<button class="btn-delete" onclick="deleteReminder(${ r.id })"> حذف</button>
+<button class="btn-delete" onclick="deleteReminder(${r.id})">حذف</button>
 `;
 container.appendChild(item);
 });
 }
 
-دالة حذف التذكير (id) {
-التذكيرات = التذكيرات.تصفية(r => r.id !== id);
+function deleteReminder(id) {
+reminders = reminders.filter(r => r.id !== id);
 saveReminders();
 renderReminders();
 }
 
-دالة حفظ التذكيرات() {
+function saveReminders() {
 localStorage.setItem('reminders', JSON.stringify(reminders));
 }
 
-// العديد من الاختبارات المحلية يعمل في حال كان التطبيق متاحاً بالأمام لتشغيل النطق الصوتي للرصيد
 setInterval(() => {
 const now = Date.now();
-reminds.forEach(r => {
-إذا لم يتم إطلاق العملية وكان الوقت الحالي أكبر من أو يساوي الطابع الزمني للعملية،
+reminders.forEach(r => {
+if (!r.fired && now >= r.timestamp) {
 r.fired = true;
 speak(r.text);
 saveReminders();
