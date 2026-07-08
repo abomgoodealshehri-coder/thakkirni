@@ -1,9 +1,9 @@
 {
-"short_name": "الاسم المختصر"
-"name": "تطبيق تذكير صوتي",
+"short_name": "ذكّرني",
+"name": "تطبيق ذكّرني الصوتي",
 "start_url": "./index.html",
-لون_الخلفية: #ffffff,
+"background_color": "#ffffff",
 "theme_color": "#007bff",
-"عرض": "مستقل"،
-"التوجيه": "صورة شخصية"
+"display": "standalone",
+"orientation": "portrait"
 }
