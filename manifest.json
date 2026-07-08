@@ -1,18 +1,9 @@
 {
-  "name": "ذكّرني - تذكيرات صوتية",
-  "short_name": "ذكّرني",
-  "description": "أضف تذكيرات بوقت حقيقي وسيذكّرك التطبيق بصوت عالٍ بالعربي",
-  "start_url": "./index.html",
-  "scope": "./",
-  "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#F3ECDD",
-  "theme_color": "#0F4C5C",
-  "lang": "ar",
-  "dir": "rtl",
-  "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" }
-  ]
+"short_name": "الاسم المختصر"
+"name": "تطبيق تذكير صوتي",
+"start_url": "./index.html",
+لون_الخلفية: #ffffff,
+"theme_color": "#007bff",
+"عرض": "مستقل"،
+"التوجيه": "صورة شخصية"
 }
